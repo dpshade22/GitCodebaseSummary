@@ -1,4 +1,10 @@
+import os
 import requests
+import base64
+from api.gitApiHandler import get_repo_contents
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PROGRAMMING_EXTENSIONS = ['.py', '.js', '.java', '.c', '.cpp', '.go', '.rb', '.php', '.cs', '.m', '.r', '.swift', '.kt',
                           '.ts', '.scala', '.rs', '.hs', '.lua', '.groovy', '.pl', '.sh', '.html', '.css', '.sass', '.scss', 'Dockerfile', '.toml']

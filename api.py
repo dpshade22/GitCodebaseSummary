@@ -1,9 +1,11 @@
 import os
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
-from api.llm.pplxApi import interact_with_llm, get_llm_responses
-from api.tree.gitTree import get_tree_contents, is_programming_file, decode_content
+from api.llm.pplxApi import *
+from api.tree.gitTree import *
 from api.gitApiHandler import get_repo_contents
+
+
 app = Flask(__name__)
 
 
@@ -38,7 +40,8 @@ def get_file_summary():
     contents = get_repo_contents(user, repo, file_name, token)
     if is_programming_file(contents['name']):
         file_content = decode_content(contents)
-        summary = interact_with_llm(f"Summarize this file: {file_content}")
+        summary = interact_with_llm(
+            f"Summarize this file: {file_content}")
         return jsonify({'summary': summary})
     return jsonify({'error': 'File not found or not a programming file'}), 404
 

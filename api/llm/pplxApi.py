@@ -1,8 +1,11 @@
 import os
-import openai
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DECLARATIVE_SYSTEM_MSG = "You are a professional programmer completing a code review. Summarize the file at the end of your review."
-openai.api_base = 'https://api.perplexity.ai/chat/completions'
+API_BASE = 'https://api.perplexity.ai/chat/completions'
 
 
 def get_llm_responses(repo_dict):
@@ -17,11 +20,17 @@ def get_llm_responses(repo_dict):
 
 
 def interact_with_llm(message, systemMessage='Be precise and concise'):
-    openai.api_key = os.getenv('PPLX_API_KEY')
+    api_key = os.getenv('PPLX_API_KEY')
 
-    response = openai.ChatCompletion.create(
-        model="mistral-7b-instruct",
-        messages=[
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "authorization": f"Bearer {api_key}"
+    }
+
+    payload = {
+        "model": "mistral-7b-instruct",
+        "messages": [
             {
                 "role": "system",
                 "content": systemMessage
@@ -31,6 +40,8 @@ def interact_with_llm(message, systemMessage='Be precise and concise'):
                 "content": message
             }
         ]
-    )
+    }
 
-    return response
+    response = requests.post(API_BASE, json=payload, headers=headers)
+
+    return response.json()
